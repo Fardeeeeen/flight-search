@@ -4,7 +4,7 @@ const axios = require('axios');
 const path = require('path');
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 // Serve static files from the "public" directory
 app.use(express.static(path.join(__dirname, 'public'), {
@@ -17,7 +17,7 @@ app.use(express.static(path.join(__dirname, 'public'), {
 app.use(bodyParser.json());
 
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', 'index.html'));
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 app.post('/search', async (req, res) => {
@@ -59,14 +59,14 @@ app.post('/search', async (req, res) => {
 
     try {
         const response = await axios.post('https://cardgpt.in/apitest', json_data, { headers });
-        console.log('API Response:', response.data); 
+        console.log('API Response:', response.data); // Log the API response
         res.json(response.data.data || []);
     } catch (error) {
-        console.error('API Error:', error);
+        console.error('API Error:', error); // Log any errors
         res.status(500).json({ error: 'An error occurred' });
     }
 });
 
 app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
+    console.log(`Server is running on port ${port}`);
 });
